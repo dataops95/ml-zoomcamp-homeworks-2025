@@ -1,0 +1,12 @@
+{
+    "data":{
+        "MedInc": [5],
+        "HouseAge": [30],
+        "AveRooms": [6],
+        "AveBedrms": [1],
+        "Population": [500],
+        "AveOccup": [3],
+        "Latitude": [34.05],
+        "Longitude": [-118.25]
+    }
+}

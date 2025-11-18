@@ -1,0 +1,60 @@
+# Python specific
+__pycache__
+*.py[cod]
+.Python
+.ipynb_checkpoints/
+*.ipynb
+
+# Data files
+*.csv
+*.xlsx
+*.json
+data/
+datasets/
+raw_data/
+
+# venv
+venv/
+env/
+/usr/local/lib/python3.x # Check your specific python version path if you use a system wide venv
+pip-wheel-metadata/
+
+# Editor/IDE files
+.vscode/
+.idea/
+.DS_Store
+
+# Version control
+.git/
+.gitignore
+
+# Testing and documentation
+tests/
+docs/
+*.md
+!README.md
+requirements_*.txt
+
+# ML specific
+# Exclude raw data or massive intermediate files not needed at runtime
+data/
+raw_data/
+# Exclude training scripts, as only the model file and inference code are needed for serving
+training_scripts/
+# Exclude large log files
+*.log
+
+# Environment variables
+.env
+*.env
+
+# Packager files
+# Recommended to include lock files in version control, but sometimes ignored
+# Pipfile.lock 
+# poetry.lock
+# package-lock.json
+
+# Docker specific
+Dockerfile*
+.dockerignore
+docker-compose*.yml
