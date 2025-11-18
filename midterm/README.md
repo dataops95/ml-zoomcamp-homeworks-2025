@@ -193,13 +193,13 @@ Visualizations include:
 ![Correlation heatmaps](./img01.png)  
 
 - Geographic scatter plots with price overlays  
-![Geographic scatter plots with price overlays] (./img02.png)  
+![Geographic scatter plots with price overlays](./img02.png)  
 
 - Distribution plots for all features
- ![Distribution plots for all features] (./img03.png)  
+ ![Distribution plots for all features](./img03.png)  
 
 - Feature importance rankings  
- ![Feature importance rankings] (./img04.png)
+ ![Feature importance rankings](./img04.png)
 
 
 ---
