@@ -188,11 +188,19 @@ Key findings from `notebook.ipynb`:
 - **No missing values** in the dataset
 - **Outliers detected** in AveRooms and AveBedrms (handled via capping)
 
-Visualizations include:
-- Correlation heatmaps
-- Geographic scatter plots with price overlays
+Visualizations include:  
+- Correlation heatmaps  
+(./img01.png)  
+
+- Geographic scatter plots with price overlays  
+ (./img02.png)  
+
 - Distribution plots for all features
-- Feature importance rankings
+ (./img03.png)  
+
+- Feature importance rankings  
+ (./img04.png)
+
 
 ---
 
