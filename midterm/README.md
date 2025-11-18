@@ -41,14 +41,19 @@ The dataset is publicly available and automatically downloaded via the sklearn l
 ```
 midterm/
 │
-├── README.md                  # Project documentation (this file)
-├── notebook.ipynb             # EDA, feature analysis, model experiments
-├── train.py                   # Script to train and save the final model
-├── predict.py                 # Script to load model and make predictions
-├── serve.py                   # Flask API for model deployment
+├── .dockerignore              # List files which are excluded from the Docker image
+├── .gitignore                 # List files which are excluded from the Git/GitHub repo
 ├── Dockerfile                 # Container configuration
-├── requirements.txt           # Python dependencies
+├── docker-compose.yaml        # Configuration file to run Docker image
 ├── model.pkl                  # Saved trained model (generated after training)
+├── notebook.ipynb             # EDA, feature analysis, model experiments
+├── predict.py                 # Script to load model and make predictions
+├── README.md                  # Project documentation (this file)
+├── requirements.txt           # Python dependencies for Docker image build
+├── requirements_dev.txt       # Python dependencies for local application test
+├── scaler.pkl                 # Saved initial data transformer (generated after training)
+├── serve.py                   # Flask API for model deployment
+├── train.py                   # Script to train and save the final model
 ├── data/                      # Dataset (auto-downloaded from sklearn)
 └── templates/                 # Flask templates
 ```
@@ -165,13 +170,10 @@ We use **Root Mean Squared Error (RMSE)** as the primary metric because:
 1. **Baseline:** Linear Regression
 2. **Tree-based:** Random Forest Regressor
 3. **Gradient Boosting:** XGBoost
-4. **Ensemble:** Stacked model combining multiple algorithms
 
 Each model underwent hyperparameter tuning using GridSearchCV with 5-fold cross-validation.
 
 ### Feature Engineering
-- Created interaction features (e.g., `rooms_per_person`)
-- Applied log transformation to skewed features
 - Standardized numeric features for linear models
 - Encoded categorical features (if any added during EDA)
 
@@ -190,16 +192,16 @@ Key findings from `notebook.ipynb`:
 
 Visualizations include:  
 - Correlation heatmaps  
-![Correlation heatmaps](./img01.png)  
+![Correlation heatmaps](./images/img01.png)  
 
 - Geographic scatter plots with price overlays  
-![Geographic scatter plots with price overlays](./img02.png)  
+![Geographic scatter plots with price overlays](./images/img02.png)  
 
 - Distribution plots for all features
- ![Distribution plots for all features](./img03.png)  
+ ![Distribution plots for all features](./images/img03.png)  
 
 - Feature importance rankings  
- ![Feature importance rankings](./img04.png)
+ ![Feature importance rankings](./images/img04.png)
 
 
 ---
