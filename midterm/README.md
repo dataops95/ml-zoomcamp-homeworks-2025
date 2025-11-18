@@ -273,17 +273,6 @@ See `requirements.txt` for full list. Key dependencies:
 
 ---
 
-## Testing
-
-Run API tests:
-```bash
-python tests/test_api.py
-```
-
-Expected output: All tests pass with status code 200 and valid JSON responses.
-
----
-
 ## Contributing
 
 This is a course project, but suggestions are welcome! Please open an issue or submit a pull request.
@@ -307,4 +296,3 @@ This project is for educational purposes as part of the ML Zoomcamp 2025 course.
 ## Acknowledgments
 
 - Dataset source: [Scikit-learn California Housing Dataset](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html)
-- Based on: Pace, R. Kelley, and Ronald Barry. "Sparse spatial autoregressions." Statistics & Probability Letters 33.3 (1997): 291-297.
