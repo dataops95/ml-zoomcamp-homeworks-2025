@@ -50,7 +50,7 @@ midterm/
 ├── requirements.txt           # Python dependencies
 ├── model.pkl                  # Saved trained model (generated after training)
 ├── data/                      # Dataset (auto-downloaded from sklearn)
-└── tests/                     # API testing scripts
+└── templates/                 # Flask templates
 ```
 
 ---
