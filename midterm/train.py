@@ -14,7 +14,6 @@ housing = fetch_california_housing(as_frame=True)
 # Create a DataFrame from the dataset
 df_raw = housing.frame
 df_raw.to_csv('data/data_raw.csv', index=False)
-
 df_original = df_raw.rename(columns={
     "MedInc": "median_income",
     "HouseAge": "median_house_age",
@@ -29,6 +28,7 @@ df_original = df_raw.rename(columns={
 
 # Check for missing values
 print(f"\n{df_original.isnull().sum()}")
+
 
 # Fill NA values with median of each numeric column
 medians = df_original.median(numeric_only=True)
@@ -62,14 +62,12 @@ def calculate_metrics(y_true, y_pred):
     r2 = r2_score(y_true, y_pred)
     return mae, rmse, r2
 
-
 def print_metrics_report(model_name, mae, rmse, r2):
     print(f"--- {model_name} Model Evaluation ---")
     print(f"Mean Absolute Error (MAE): {mae:.4f}")
     print(f"Root Mean Squared Error (RMSE): {rmse:.4f}")
     print(f"R-squared Error (R2): {r2:.4f}")
     print("-------------------------------------")
-
 
 # XGBoost Regressor Model
 model = XGBRegressor(n_estimators=300, learning_rate=0.05, max_depth=10, random_state=42)
