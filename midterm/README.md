@@ -190,16 +190,16 @@ Key findings from `notebook.ipynb`:
 
 Visualizations include:  
 - Correlation heatmaps  
-(./img01.png)  
+![Correlation heatmaps](./img01.png)  
 
 - Geographic scatter plots with price overlays  
- (./img02.png)  
+![Geographic scatter plots with price overlays] (./img02.png)  
 
 - Distribution plots for all features
- (./img03.png)  
+ ![Distribution plots for all features] (./img03.png)  
 
 - Feature importance rankings  
- (./img04.png)
+ ![Feature importance rankings] (./img04.png)
 
 
 ---
