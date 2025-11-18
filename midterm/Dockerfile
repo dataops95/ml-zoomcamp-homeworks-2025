@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir --only-binary :all: -r requirements.txt && \
 COPY . .
 
 EXPOSE $PORT
-CMD ["sh", "-c", "gunicorn --workers=4 --bind 0.0.0.0:$PORT app:app"]
+CMD ["sh", "-c", "gunicorn --workers=4 --bind 0.0.0.0:$PORT serve:app"]
