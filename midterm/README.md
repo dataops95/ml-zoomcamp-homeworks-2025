@@ -198,14 +198,14 @@ Visualizations include:
 
 ## Results
 
-| Model                | RMSE (CV)  | RMSE (Test) | Training Time |
-|---------------------|------------|-------------|---------------|
-| Linear Regression   | 0.73       | 0.74        | < 1s          |
-| Random Forest       | 0.51       | 0.52        | ~15s          |
-| **XGBoost**         | **0.48**   | **0.49**    | ~8s           |
-| Stacked Ensemble    | 0.49       | 0.50        | ~25s          |
+| Model                | MAE       | RMSE        | R^2   |
+|---------------------|------------|-------------|-------|
+| Linear Regression   | 0.5332     | 0.7456      | 0.5758|
+| Random Forest       | 0.3274     | 0.5051      | 0.8053|
+| **XGBoost**         | **0.2987** | **0.4637**  | **0.8359**|
 
-**Final Model Selected:** XGBoost with tuned hyperparameters (`max_depth=6, learning_rate=0.1, n_estimators=200`)
+
+**Final Model Selected:** XGBoost with tuned hyperparameters (`n_estimators=300, learning_rate=0.05, max_depth=10, random_state=42`)
 
 ---
 
