@@ -237,8 +237,6 @@ We use **Root Mean Squared Error (RMSE)** as the primary metric because:
 2. **Tree-based:** Random Forest Regressor
 3. **Gradient Boosting:** XGBoost
 
-Each model underwent hyperparameter tuning using GridSearchCV with 5-fold cross-validation.
-
 ### Feature Engineering
 - Standardized numeric features for linear models
 - Encoded categorical features (if any added during EDA)
