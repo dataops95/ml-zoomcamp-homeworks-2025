@@ -326,7 +326,7 @@ az container create --resource-group myResourceGroup \
 
 ## Dependencies
 
-See `requirements.txt` for full list. Key dependencies:
+See `requirements.txt`/`requirements_dev.txt` for full list. Key dependencies:
 - `scikit-learn==1.7.2`
 - `xgboost==3.1.1`
 - `pandas==2.3.3`
