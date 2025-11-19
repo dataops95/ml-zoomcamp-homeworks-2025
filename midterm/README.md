@@ -101,7 +101,7 @@ This will generate `model.pkl` containing the trained model.
 ```bash
 python serve.py
 ```
-The API will be available at `http://localhost:5000`
+The API will be available at `http://127.0.0.1:5000/predict_api`
 
 7. **API and web UI validation screenshots:**
 
@@ -181,7 +181,7 @@ docker build -t california-housing-predictor .
 docker-compose up -d  
 ```
 
-The service will be accessible at `http://localhost:5000`
+The service will be accessible at `http://127.0.0.1:5000/predict_api`
 
 ---
 
