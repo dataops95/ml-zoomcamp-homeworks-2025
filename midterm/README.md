@@ -111,7 +111,7 @@ API:
 Web UI:  
 ![Web](./images/serve_web.jpg)  
 
-Postman Console:  
+Postman Console for API prediction:  
 ```bash
 POST http://127.0.0.1:5000/predict_api
 
@@ -197,7 +197,7 @@ curl http://localhost:5000/health
 {"status": "healthy"}
 ```
 
-### Make a Prediction
+### Make a Prediction Using API
 ```bash
 curl -X POST http://localhost:5000/predict_api \
   -H "Content-Type: application/json" \
