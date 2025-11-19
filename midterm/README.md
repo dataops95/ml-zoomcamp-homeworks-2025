@@ -55,7 +55,8 @@ midterm/
 ├── serve.py                   # Flask API for model deployment
 ├── train.py                   # Script to train and save the final model
 ├── data/                      # Dataset (auto-downloaded from sklearn)
-└── templates/                 # Flask templates
+├── templates/                 # Flask templates
+└── tests/                     # Test files
 ```
 
 ---
