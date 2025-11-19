@@ -178,7 +178,7 @@ docker build -t california-housing-predictor .
 
 ### Run the container:
 ```bash
-docker run -it --rm -p 5000:5000 california-housing-predictor
+docker-compose up -d  
 ```
 
 The service will be accessible at `http://localhost:5000`
@@ -233,13 +233,13 @@ We use **Root Mean Squared Error (RMSE)** as the primary metric because:
 - Widely accepted standard for regression problems
 
 ### Models Trained
-1. **Baseline:** Linear Regression
-2. **Tree-based:** Random Forest Regressor
-3. **Gradient Boosting:** XGBoost
+1. **LinearRegression:** Linear Regression
+2. **RandomForestRegressor:** Random Forest Regressor
+3. **XGBRegressor:** XGBoost
 
 ### Feature Engineering
-- Standardized numeric features for linear models
-- Encoded categorical features (if any added during EDA)
+- Standardized numeric features for the utilized models
+- Implemented replacement of the missing values with the median
 
 ---
 
