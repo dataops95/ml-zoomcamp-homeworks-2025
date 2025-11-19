@@ -82,7 +82,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 3. **Install dependencies:**
 ```bash
-pip install -r requirements.txt
+pip install -r requirements_dev.txt
 ```
 
 4. **Run the Jupyter notebook (optional):**
@@ -100,7 +100,71 @@ This will generate `model.pkl` containing the trained model.
 ```bash
 python serve.py
 ```
-The API will be available at `http://localhost:9696`
+The API will be available at `http://localhost:5000`
+
+7. **API and web UI validation screenshots:**
+
+API:  
+![API](./images/serve_api.jpg)  
+
+Web UI:  
+![Web](./images/serve_web.jpg)  
+
+Postman Console:  
+```bash
+POST http://127.0.0.1:5000/predict_api
+
+POST /predict_api HTTP/1.1
+Content-Type: text/plain
+User-Agent: PostmanRuntime/7.39.1
+Accept: */*
+Cache-Control: no-cache
+Postman-Token: 1b993bac-f565-4bf6-a487-76d7653cb54e
+Host: 127.0.0.1:5000
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Content-Length: 231
+ 
+{
+"data":{
+"MedInc": 5,
+"HouseAge": 30,
+"AveRooms": 6,
+"AveBedrms": 1,
+"Population": 500,
+"AveOccup": 3,
+"Latitude": 34.05,
+"Longitude": -118.25
+}
+}
+ 
+HTTP/1.1 undefined
+Server: Werkzeug/3.1.3 Python/3.11.3
+Date: Wed, 19 Nov 2025 05:13:11 GMT
+Content-Type: application/json
+Content-Length: 38
+Connection: close
+ 
+{
+"prediction": 2.553443193435669
+}
+```
+
+8. **API test using tests/test_api.py**
+```bash
+python tests/test_api.py
+```
+Response:  
+```
+python tests/test_api.py 
+Sending request...
+Status Code: 200
+Response JSON:
+{
+    "prediction": 2.553443193435669
+}
+```
+
 
 ---
 
@@ -113,10 +177,10 @@ docker build -t california-housing-predictor .
 
 ### Run the container:
 ```bash
-docker run -it --rm -p 9696:9696 california-housing-predictor
+docker run -it --rm -p 5000:5000 california-housing-predictor
 ```
 
-The service will be accessible at `http://localhost:9696`
+The service will be accessible at `http://localhost:5000`
 
 ---
 
@@ -124,7 +188,7 @@ The service will be accessible at `http://localhost:9696`
 
 ### Health Check
 ```bash
-curl http://localhost:9696/health
+curl http://localhost:5000/health
 ```
 
 **Response:**
@@ -134,25 +198,26 @@ curl http://localhost:9696/health
 
 ### Make a Prediction
 ```bash
-curl -X POST http://localhost:9696/predict \
+curl -X POST http://localhost:5000/predict_api \
   -H "Content-Type: application/json" \
   -d '{
-    "MedInc": 8.3252,
-    "HouseAge": 41.0,
-    "AveRooms": 6.984127,
-    "AveBedrms": 1.023810,
-    "Population": 322.0,
-    "AveOccup": 2.555556,
-    "Latitude": 37.88,
-    "Longitude": -122.23
+    "data": {
+        "MedInc": 5,
+        "HouseAge": 30,
+        "AveRooms": 6,
+        "AveBedrms": 1,
+        "Population": 500,
+        "AveOccup": 3,
+        "Latitude": 34.05,
+        "Longitude": -118.25
+    }
   }'
 ```
 
 **Response:**
 ```json
-{
-  "predicted_price": 452700.50,
-  "model_version": "1.0"
+itude": -118.25\x0a}\x0a}';eacafde3-0f6c-4a85-9a8a-de4702875dad{
+  "prediction": 2.553443193435669
 }
 ```
 
@@ -255,7 +320,7 @@ gcloud run deploy --image gcr.io/PROJECT_ID/california-housing --platform manage
 ```bash
 az container create --resource-group myResourceGroup \
   --name california-housing --image california-housing-predictor \
-  --dns-name-label california-housing-api --ports 9696
+  --dns-name-label california-housing-api --ports 5000
 ```
 
 ---
@@ -263,13 +328,12 @@ az container create --resource-group myResourceGroup \
 ## Dependencies
 
 See `requirements.txt` for full list. Key dependencies:
-- `scikit-learn==1.5.2`
-- `xgboost==2.1.2`
-- `pandas==2.2.3`
-- `numpy==1.26.4`
-- `flask==3.0.3`
-- `matplotlib==3.9.2`
-- `seaborn==0.13.2`
+- `scikit-learn==1.7.2`
+- `xgboost==3.1.1`
+- `pandas==2.3.3`
+- `numpy==2.3.5`
+- `Flask==3.1.2`
+- `matplotlib==3.10.7`
 
 ---
 

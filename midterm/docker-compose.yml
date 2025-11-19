@@ -2,8 +2,8 @@ version: '3.8'
 
 services:
   ml-app:
-    image: my-ml-app:v5.0
-    container_name: california-housing-predictor
+    image: housing-price-predictor:latest
+    container_name: housing-price-predictor
     
     # Build configuration (optional - if you want to build from Dockerfile)
     # build:

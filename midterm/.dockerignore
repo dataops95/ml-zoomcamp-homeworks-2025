@@ -39,6 +39,7 @@ requirements_*.txt
 # Exclude raw data or massive intermediate files not needed at runtime
 data/
 raw_data/
+images/
 # Exclude training scripts, as only the model file and inference code are needed for serving
 training_scripts/
 # Exclude large log files
