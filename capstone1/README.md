@@ -83,8 +83,8 @@ The model analyzes 13 medical indicators (age, blood pressure, cholesterol, ECG 
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/heart-disease-prediction.git
-cd heart-disease-prediction
+git clone https://github.com/dataops95/ml-zoomcamp-homeworks-2025.git
+cd ml-zoomcamp-homeworks-2025\capstone1
 ```
 
 2. **Create virtual environment**
