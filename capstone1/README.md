@@ -724,6 +724,10 @@ python -c "import joblib; m=joblib.load('models/model_metadata.pkl'); print(f\"A
 # Expected output: Accuracy: 0.8683 (±0.02)
 ```
 
+### Screenshots of the Model Testing
+
+![API Testing](./images/testing_api.png) 
+
 ## 🌐 Cloud Deployment
 
 Deploy to major cloud providers:
@@ -785,13 +789,9 @@ Contributions welcome! Please:
 4. Push to branch (`git push origin feature/amazing-improvement`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License.
-
 ## 👥 Authors
 
-- **Your Name** - [GitHub](https://github.com/dataops95)
+- **Vovan** - [GitHub](https://github.com/dataops95)
 
 ## 🙏 Acknowledgments
 
