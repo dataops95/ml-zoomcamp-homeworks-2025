@@ -42,7 +42,7 @@ The model analyzes **13 medical indicators** (age, blood pressure, cholesterol, 
 
 ### Source & Statistics
 - **Dataset**: heart.csv
-- **Source**: [UCI Heart Disease Dataset](https://archive.ics.uci.edu/ml/datasets/heart+disease) / Kaggle
+- **Source**: [Heart Disease Dataset](https://www.kaggle.com/datasets/johnsmith88/heart-disease-dataset) / Kaggle
 - **Repository**: [GitHub - capstone1/data/heart.csv](https://github.com/dataops95/ml-zoomcamp-homeworks-2025/blob/main/capstone1/data/heart.csv)
 - **Size**: **1,025 patient records**
 - **Features**: 13 medical indicators
