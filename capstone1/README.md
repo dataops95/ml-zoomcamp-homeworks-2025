@@ -11,6 +11,7 @@ Machine learning project for predicting heart disease risk based on medical indi
 - [Problem Description](#-problem-description)
 - [Dataset](#-dataset)
 - [Installation](#-installation)
+- [Project Structure](#-project-structure)
 - [Usage](#-usage)
 - [API Documentation](#-api-documentation)
 - [Docker Deployment](#-docker-deployment)
@@ -143,7 +144,7 @@ curl -X POST http://localhost:9696/predict \
   -d @example_patient.json
 ```
 
-## Project Structure
+## 🧩 Project Structure
 
 ```
 capstone1/
