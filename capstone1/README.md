@@ -17,6 +17,7 @@ Machine learning project for predicting heart disease risk based on medical indi
 - [Docker Deployment](#-docker-deployment)
 - [Project Structure](#-project-structure)
 - [Results](#-results)
+- [Screenshots of the Model Testing](#-screenshots-of-the-model-testing)
 - [Cloud Deployment](#-cloud-deployment)
 
 ## 🎯 Problem Description
@@ -728,15 +729,15 @@ python -c "import joblib; m=joblib.load('models/model_metadata.pkl'); print(f\"A
 # Expected output: Accuracy: 0.8033 (±0.02)
 ```
 
-### Screenshots of the Model Testing
+## 🏆 Screenshots of the Model Testing
 
-#### API Testing
+### API Testing
 ![API Testing](./images/testing_api.png)  
 
-#### Flask Web Application Testing
+### Flask Web Application Testing
 ![Web Testing](./images/testing_web.png)  
 
-#### Flask Web Application on Docker Testing
+### Flask Web Application on Docker Testing
 ![Docker Testing](./images/testing_docker.png)  
 
 ## 🌐 Cloud Deployment
