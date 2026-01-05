@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  ml-app:
+    image: heart-disease-prediction-2026:latest
+    container_name: heart-disease-prediction-2026
+    
+    # Build configuration (optional - if you want to build from Dockerfile)
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    
+    # Port mapping
+    ports:
+      - "5000:5000"  # Flask default port
+    
+    # Environment variables
+    environment:
+      - PORT=5000
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+      - WORKERS=2  # Gunicorn workers (set lower due to resource limits)
+    
+    # Resource limits (CRITICAL for production)
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'        # Maximum 1 CPU core
+          memory: 512M       # Maximum 512 MB RAM
+        reservations:
+          cpus: '0.5'        # Reserved 0.5 CPU core
+          memory: 256M       # Reserved 256 MB RAM
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9696/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+    
+    # Network
+    networks:
+      - ml-network
+
+# Network configuration
+networks:
+  ml-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

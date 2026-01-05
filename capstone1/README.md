@@ -144,7 +144,7 @@ curl -X POST http://localhost:9696/predict \
   -d @example_patient.json
 ```
 
-## 🧩 Project Structure
+## 📁 Project Structure
 
 ```
 capstone1/
@@ -163,12 +163,15 @@ capstone1/
 ├── templates/                  # Flask web app
 │   └── home. html              # Web form template
 ├── .dockerignore               # List files which are excluded from the Docker image
+├── docker-compose.yml          # Configuration file to run Docker image
 ├── Dockerfile                  # Container configuration for deploying the ML model
+│
 ├── README.md                   # Project documentation with dataset info, API usage, and deployment guide
+├── requirements.txt            # Python dependencies (scikit-learn, pandas, numpy, flask, etc.)
+│
 ├── notebook.ipynb              # EDA, feature analysis, model experiments, and performance evaluation
 ├── predict.py                  # Script to load model and make predictions on new data
-├── requirements.txt            # Python dependencies (scikit-learn, pandas, numpy, flask, etc.)
-├── serve.py                    # Flask API for model deployment and prediction endpoints
+├── serve.py                    # Flask API/Web application for model deployment and prediction endpoints
 └── train.py                    # Script to train and save the final model with preprocessing pipeline
 ```
 
@@ -614,34 +617,6 @@ services:
 Run:
 ```bash
 docker-compose up -d
-```
-
-## 📁 Project Structure
-
-```
-heart-disease-prediction/
-│
-├── data/
-│   └── heart.csv                  # Dataset (1,025 samples)
-│
-├── models/                         # Trained model artifacts
-│   ├── heart_disease_model.pkl    # Random Forest (Tuned)
-│   ├── scaler.pkl                 # StandardScaler
-│   ├── feature_names.pkl          # 13 feature names
-│   └── model_metadata.pkl         # Training metadata
-│
-├── notebooks/
-│   └── notebook.ipynb             # EDA & experiments
-│
-├── train.py                        # Model training script
-├── predict.py                      # Prediction module
-├── serve.py                        # Flask API server
-│
-├── requirements.txt                # Python dependencies
-├── Dockerfile                      # Docker configuration
-├── .dockerignore                   # Docker ignore file
-├── .gitignore                      # Git ignore file
-└── README.md                       # This file
 ```
 
 ## 📈 Results
