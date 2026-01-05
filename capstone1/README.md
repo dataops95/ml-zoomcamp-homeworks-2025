@@ -719,9 +719,9 @@ pip install -r requirements.txt
 python train.py
 
 # 3. Verify accuracy
-python -c "import joblib; m=joblib.load('models/model_metadata.pkl'); print(f\"Accuracy: {m['metrics']['accuracy']:.4f}\")"
+python -c "import joblib; m=joblib.load('models/model_metadata.pkl'); print(f\"Accuracy: {m['test_accuracy']:.4f}\")"
 
-# Expected output: Accuracy: 0.8683 (±0.02)
+# Expected output: Accuracy: 0.8033 (±0.02)
 ```
 
 ### Screenshots of the Model Testing
