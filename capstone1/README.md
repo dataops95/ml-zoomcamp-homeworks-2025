@@ -736,6 +736,9 @@ python -c "import joblib; m=joblib.load('models/model_metadata.pkl'); print(f\"A
 #### Flask Web Application Testing
 ![Web Testing](./images/testing_web.png)  
 
+#### Flask Web Application on Docker Testing
+![Docker Testing](./images/testing_docker.png)  
+
 ## 🌐 Cloud Deployment
 
 Deploy to major cloud providers:
