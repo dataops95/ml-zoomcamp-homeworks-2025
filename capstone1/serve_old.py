@@ -1,9 +1,9 @@
 """
 Heart Disease Prediction - Flask API Server
-This script serves the trained model via REST API and Web Interface
+This script serves the trained model via REST API
 """
 
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify
 import predict
 import logging
 from datetime import datetime
@@ -12,7 +12,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 # Configure logging
-logging. basicConfig(
+logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
@@ -33,22 +33,15 @@ load_model()
 
 @app.route('/')
 def home():
-    """Home page with web form interface"""
-    return render_template('home.html')
-
-@app.route('/api')
-def api_docs():
-    """API documentation endpoint"""
+    """Home page with API documentation"""
     return jsonify({
         'message': 'Heart Disease Prediction API',
         'version': '1.0.0',
-        'endpoints':  {
-            'GET /': 'Web interface with form',
-            'GET /api':  'API documentation',
+        'endpoints': {
+            'GET /': 'API documentation',
             'GET /health': 'Health check',
             'GET /info': 'Model information',
-            'POST /predict': 'Make prediction via API (JSON)',
-            'POST /predict_web': 'Make prediction via web form',
+            'POST /predict': 'Make prediction for single patient',
             'POST /predict_batch': 'Make predictions for multiple patients'
         },
         'example_request': {
@@ -59,7 +52,7 @@ def api_docs():
             'chol': 230,
             'fbs': 0,
             'restecg': 1,
-            'thalach':  150,
+            'thalach': 150,
             'exang': 0,
             'oldpeak': 0.5,
             'slope': 2,
@@ -75,13 +68,13 @@ def health_check():
         return jsonify({
             'status': 'healthy',
             'model_loaded': True,
-            'timestamp': datetime. now().isoformat()
+            'timestamp': datetime.now().isoformat()
         }), 200
     else:
         return jsonify({
             'status': 'unhealthy',
             'model_loaded': False,
-            'timestamp': datetime. now().isoformat()
+            'timestamp': datetime.now().isoformat()
         }), 503
 
 @app.route('/info', methods=['GET'])
@@ -104,83 +97,10 @@ def model_info():
         }
     })
 
-@app.route('/predict_web', methods=['POST'])
-def predict_web():
-    """
-    Make prediction from web form submission
-    Returns rendered HTML page with results
-    """
-    try:
-        # Check if model is loaded
-        if not predictor.is_loaded:
-            return render_template('home.html', 
-                                 prediction_text="❌ Error: Model not loaded",
-                                 probability="")
-        
-        # Get form data and convert to float
-        form_data = {
-            'age': float(request.form['age']),
-            'sex':  float(request.form['sex']),
-            'cp': float(request.form['cp']),
-            'trestbps': float(request.form['trestbps']),
-            'chol':  float(request.form['chol']),
-            'fbs':  float(request.form['fbs']),
-            'restecg': float(request.form['restecg']),
-            'thalach': float(request.form['thalach']),
-            'exang': float(request. form['exang']),
-            'oldpeak': float(request.form['oldpeak']),
-            'slope': float(request.form['slope']),
-            'ca': float(request.form['ca']),
-            'thal': float(request.form['thal'])
-        }
-        
-        # Log request
-        logger.info(f"Web form prediction request: age={form_data['age']}, sex={form_data['sex']}")
-        
-        # Make prediction
-        result = predictor.predict(form_data)
-        
-        # Format result for display
-        risk_level = result['risk_level']
-        probability = result['probability']
-        
-        # Create styled prediction text
-        if result['prediction'] == 0:
-            prediction_text = f"✅ {risk_level}"
-            css_class = "low-risk"
-        else:
-            prediction_text = f"⚠️ {risk_level}"
-            css_class = "high-risk"
-        
-        probability_text = f"{probability:.1%} probability"
-        
-        # Log result
-        logger.info(f"Web prediction result: {risk_level} (probability:  {probability:.2%})")
-        
-        return render_template('home.html', 
-                             prediction_text=prediction_text,
-                             probability=probability_text)
-        
-    except KeyError as e:
-        logger. error(f"Missing form field: {str(e)}")
-        return render_template('home.html',
-                             prediction_text=f"❌ Error: Missing field {str(e)}",
-                             probability="")
-    except ValueError as e:
-        logger.error(f"Invalid input value: {str(e)}")
-        return render_template('home.html',
-                             prediction_text=f"❌ Error: Invalid input - {str(e)}",
-                             probability="")
-    except Exception as e:
-        logger.error(f"Prediction error: {str(e)}")
-        return render_template('home.html',
-                             prediction_text="❌ Error: Prediction failed",
-                             probability=str(e))
-
 @app.route('/predict', methods=['POST'])
 def predict_endpoint():
     """
-    Make prediction for a single patient via API (JSON input)
+    Make prediction for a single patient
     
     Expected JSON format:
     {
@@ -190,13 +110,13 @@ def predict_endpoint():
         "trestbps": 130,
         "chol": 230,
         "fbs": 0,
-        "restecg":  1,
+        "restecg": 1,
         "thalach": 150,
         "exang": 0,
         "oldpeak": 0.5,
         "slope": 2,
         "ca": 0,
-        "thal":  2
+        "thal": 2
     }
     
     Returns:
@@ -215,8 +135,8 @@ def predict_endpoint():
         # Get request data
         data = request.get_json()
         
-        if not data: 
-            return jsonify({'error':  'No data provided'}), 400
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
         
         # Required fields
         required_fields = [
@@ -226,20 +146,20 @@ def predict_endpoint():
         
         # Check for missing fields
         missing_fields = [field for field in required_fields if field not in data]
-        if missing_fields: 
+        if missing_fields:
             return jsonify({
                 'error': 'Missing required fields',
                 'missing_fields': missing_fields
             }), 400
         
         # Log request
-        logger.info(f"API prediction request: age={data. get('age')}, sex={data.get('sex')}")
+        logger.info(f"Received prediction request: age={data.get('age')}, sex={data.get('sex')}")
         
         # Make prediction
         result = predictor.predict(data)
         
         # Log result
-        logger.info(f"API prediction result: {result['risk_level']} (probability: {result['probability']:.2%})")
+        logger.info(f"Prediction result: {result['risk_level']} (probability: {result['probability']:.2%})")
         
         return jsonify(result), 200
         
@@ -255,13 +175,13 @@ def predict_batch_endpoint():
     """
     Make predictions for multiple patients
     
-    Expected JSON format: 
+    Expected JSON format:
     {
         "patients": [
             {
                 "age": 45,
                 "sex": 1,
-                ... 
+                ...
             },
             {
                 "age": 60,
@@ -274,20 +194,20 @@ def predict_batch_endpoint():
     Returns:
     {
         "predictions": [
-            {"prediction": 0, "risk_level": "Low Risk", ... },
+            {"prediction": 0, "risk_level": "Low Risk", ...},
             {"prediction": 1, "risk_level": "High Risk", ...}
         ]
     }
     """
     try:
         # Check if model is loaded
-        if not predictor. is_loaded:
+        if not predictor.is_loaded:
             return jsonify({'error': 'Model not loaded'}), 503
         
         # Get request data
         data = request.get_json()
         
-        if not data or 'patients' not in data: 
+        if not data or 'patients' not in data:
             return jsonify({'error': 'No patients data provided'}), 400
         
         patients = data['patients']
@@ -299,20 +219,20 @@ def predict_batch_endpoint():
             return jsonify({'error': 'Empty patients list'}), 400
         
         # Log request
-        logger. info(f"Received batch prediction request for {len(patients)} patients")
+        logger.info(f"Received batch prediction request for {len(patients)} patients")
         
         # Make predictions
         results = predictor.predict_batch(patients)
         
         # Log results
-        high_risk_count = sum(1 for r in results if r. get('prediction') == 1)
+        high_risk_count = sum(1 for r in results if r.get('prediction') == 1)
         logger.info(f"Batch prediction complete: {high_risk_count}/{len(patients)} high risk")
         
         return jsonify({'predictions': results}), 200
         
     except Exception as e:
-        logger.error(f"Batch prediction error:  {str(e)}")
-        return jsonify({'error': 'Internal server error', 'details':  str(e)}), 500
+        logger.error(f"Batch prediction error: {str(e)}")
+        return jsonify({'error': 'Internal server error', 'details': str(e)}), 500
 
 @app.errorhandler(404)
 def not_found(error):
@@ -325,26 +245,19 @@ def internal_error(error):
     logger.error(f"Internal server error: {str(error)}")
     return jsonify({'error': 'Internal server error'}), 500
 
-if __name__ == '__main__': 
+if __name__ == '__main__':
     print("="*80)
-    print("HEART DISEASE PREDICTION API & WEB INTERFACE")
+    print("HEART DISEASE PREDICTION API")
     print("="*80)
     print("\nStarting Flask server...")
-    print("🌐 Web Interface: http://localhost:9696")
-    print("📡 API Endpoint:   http://localhost:9696/api")
+    print("API will be available at: http://localhost:9696")
     print("\nEndpoints:")
-    print("  • GET  /          - Web form interface")
-    print("  • GET  /api       - API documentation")
+    print("  • GET  /          - API documentation")
     print("  • GET  /health    - Health check")
     print("  • GET  /info      - Model information")
-    print("  • POST /predict   - Single prediction (JSON API)")
-    print("  • POST /predict_web - Single prediction (Web form)")
+    print("  • POST /predict   - Single prediction")
     print("  • POST /predict_batch - Batch predictions")
-    print("\n💡 Quick Start:")
-    print("  1. Open browser:  http://localhost:9696")
-    print("  2. Use default values or modify inputs")
-    print("  3. Click 'Predict Heart Disease Risk'")
-    print("\nExample API curl command:")
+    print("\nExample curl command:")
     print("""
     curl -X POST http://localhost:9696/predict \\
       -H "Content-Type: application/json" \\
@@ -352,7 +265,7 @@ if __name__ == '__main__':
         "age": 45,
         "sex": 1,
         "cp": 2,
-        "trestbps":  130,
+        "trestbps": 130,
         "chol": 230,
         "fbs": 0,
         "restecg": 1,
@@ -368,4 +281,3 @@ if __name__ == '__main__':
     
     # Run Flask app
     app.run(host='0.0.0.0', port=9696, debug=False)
-    

@@ -153,12 +153,15 @@ capstone1/
 │   ├── heart.csv               # Heart disease dataset with patient health features
 │   └── link.txt                # Source/reference link for the dataset
 ├── images/                     # Documentation images
-│   └── testing_api.png         # Screenshot demonstrating API testing/usage
+│   ├── testing_api.png         # Screenshot demonstrating API testing/usage
+│   └── testing_web.png         # Screenshot demonstrating Flask web app testing/usage
 ├── models/                     # Trained model artifacts (generated after training)
 │   ├── feature_names.pkl       # Saved feature names used during training
 │   ├── heart_disease_model.pkl # Saved trained ML model
 │   ├── model_metadata.pkl      # Model metadata (hyperparameters, training configuration)
 │   └── scaler. pkl             # Saved feature scaler for data normalization
+├── templates/                  # Flask web app
+│   └── home. html              # Web form template
 ├── .dockerignore               # List files which are excluded from the Docker image
 ├── Dockerfile                  # Container configuration for deploying the ML model
 ├── README.md                   # Project documentation with dataset info, API usage, and deployment guide
@@ -752,7 +755,11 @@ python -c "import joblib; m=joblib.load('models/model_metadata.pkl'); print(f\"A
 
 ### Screenshots of the Model Testing
 
-![API Testing](./images/testing_api.png) 
+#### API Testing
+![API Testing](./images/testing_api.png)  
+
+#### Flask Web Application Testing
+![Web Testing](./images/testing_web.png)  
 
 ## 🌐 Cloud Deployment
 
