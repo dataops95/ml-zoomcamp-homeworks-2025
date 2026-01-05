@@ -143,6 +143,31 @@ curl -X POST http://localhost:9696/predict \
   -d @example_patient.json
 ```
 
+## Project Structure
+
+```
+capstone1/
+│
+├── data/                       # Dataset directory
+│   ├── heart.csv               # Heart disease dataset with patient health features
+│   └── link.txt                # Source/reference link for the dataset
+├── images/                     # Documentation images
+│   └── testing_api.png         # Screenshot demonstrating API testing/usage
+├── models/                     # Trained model artifacts (generated after training)
+│   ├── feature_names.pkl       # Saved feature names used during training
+│   ├── heart_disease_model.pkl # Saved trained ML model
+│   ├── model_metadata.pkl      # Model metadata (hyperparameters, training configuration)
+│   └── scaler. pkl             # Saved feature scaler for data normalization
+├── .dockerignore               # List files which are excluded from the Docker image
+├── Dockerfile                  # Container configuration for deploying the ML model
+├── README.md                   # Project documentation with dataset info, API usage, and deployment guide
+├── notebook.ipynb              # EDA, feature analysis, model experiments, and performance evaluation
+├── predict.py                  # Script to load model and make predictions on new data
+├── requirements.txt            # Python dependencies (scikit-learn, pandas, numpy, flask, etc.)
+├── serve.py                    # Flask API for model deployment and prediction endpoints
+└── train.py                    # Script to train and save the final model with preprocessing pipeline
+```
+
 ## 📖 Usage
 
 ### 1. Training the Model
