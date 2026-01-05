@@ -17,7 +17,7 @@ Machine learning project for predicting heart disease risk based on medical indi
 - [Docker Deployment](#-docker-deployment)
 - [Project Structure](#-project-structure)
 - [Results](#-results)
-- [Model Performance](#-model-performance)
+- [Cloud Deployment](#-cloud-deployment)
 
 ## 🎯 Problem Description
 
