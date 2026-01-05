@@ -38,7 +38,8 @@ class HeartDiseasePredictor:
             self.is_loaded = True
             print(f"✅ Model loaded: {self.metadata['model_name']}")
             print(f"   Trained on: {self.metadata['training_date']}")
-            print(f"   Test Accuracy: {self.metadata['metrics']['accuracy']:.4f}")
+            # print(f"   Test Accuracy: {self.metadata['metrics']['accuracy']:.4f}")
+            print(f"   Test Accuracy: {self.metadata['test_accuracy']:.4f}")
             return True
         except FileNotFoundError as e:
             print(f"❌ Error: Model files not found. Please run train.py first.")
@@ -87,8 +88,11 @@ class HeartDiseasePredictor:
         
         # Scale features
         scaled_features = self.scaler.transform(df)
+
+        # Convert back to DataFrame to preserve feature names
+        scaled_df = pd.DataFrame(scaled_features, columns=self. feature_names)
         
-        return scaled_features
+        return scaled_df
     
     def predict(self, features: Dict) -> Dict:
         """
