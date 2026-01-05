@@ -13,7 +13,11 @@ from datetime import datetime
 from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score, StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 import xgboost as xgb
 
@@ -198,9 +202,13 @@ def train_models(X_train, y_train, X_test, y_test):
     
     models = {
         'Logistic Regression': LogisticRegression(max_iter=1000, random_state=RANDOM_STATE),
+        'Decision Tree': DecisionTreeClassifier(random_state=RANDOM_STATE),
         'Random Forest': RandomForestClassifier(n_estimators=100, random_state=RANDOM_STATE),
         'Gradient Boosting': GradientBoostingClassifier(n_estimators=100, random_state=RANDOM_STATE),
-        'XGBoost': xgb.XGBClassifier(n_estimators=100, random_state=RANDOM_STATE, eval_metric='logloss')
+        'XGBoost': xgb.XGBClassifier(n_estimators=100, random_state=RANDOM_STATE, eval_metric='logloss'),
+        'SVM': SVC(kernel='rbf', probability=True, random_state=RANDOM_STATE),
+        'K-Nearest Neighbors': KNeighborsClassifier(n_neighbors=5),
+        'Naive Bayes': GaussianNB()
     }
     
     results = {}
@@ -215,14 +223,14 @@ def train_models(X_train, y_train, X_test, y_test):
         
         # Predictions
         y_pred = model.predict(X_test)
-        y_pred_proba = model.predict_proba(X_test)[:, 1]
+        y_pred_proba = model.predict_proba(X_test)[:, 1] if hasattr(model, 'predict_proba') else None
         
         # Metrics
         accuracy = accuracy_score(y_test, y_pred)
-        precision = precision_score(y_test, y_pred, zero_division=0)
-        recall = recall_score(y_test, y_pred, zero_division=0)
-        f1 = f1_score(y_test, y_pred, zero_division=0)
-        roc_auc = roc_auc_score(y_test, y_pred_proba)
+        precision = precision_score(y_test, y_pred, zero_division=0, average='binary')
+        recall = recall_score(y_test, y_pred, zero_division=0, average='binary')
+        f1 = f1_score(y_test, y_pred, zero_division=0, average='binary')
+        roc_auc = roc_auc_score(y_test, y_pred_proba) if y_pred_proba is not None else np.nan
         
         # Cross-validation
         cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
@@ -230,6 +238,8 @@ def train_models(X_train, y_train, X_test, y_test):
         
         results[name] = {
             'model': model,
+            'y_pred': y_pred,
+            'y_pred_proba': y_pred_proba,
             'accuracy': accuracy,
             'precision': precision,
             'recall': recall,
@@ -259,14 +269,16 @@ def tune_best_model(X_train, y_train, X_test, y_test, model_name, base_model):
             'n_estimators': [50, 100, 200],
             'max_depth': [5, 10, 15, None],
             'min_samples_split': [2, 5, 10],
-            'min_samples_leaf': [1, 2, 4]
+            'min_samples_leaf': [1, 2, 4],
+            'max_features': ['sqrt', 'log2']
         }
     elif 'XGBoost' in model_name:
         param_grid = {
             'n_estimators': [50, 100, 200],
             'max_depth': [3, 5, 7],
             'learning_rate': [0.01, 0.05, 0.1],
-            'subsample': [0.7, 0.8, 1.0]
+            'subsample': [0.7, 0.8, 1.0],
+            'colsample_bytree': [0.7, 0.8, 1.0]
         }
     elif 'Gradient Boosting' in model_name:
         param_grid = {
@@ -369,42 +381,113 @@ def main():
         # 4. Train multiple models
         results = train_models(X_train_scaled, y_train, X_test_scaled, y_test)
         
-        # 5. Select best model
-        best_model_name = max(results, key=lambda x: results[x]['accuracy'])
-        best_metrics = results[best_model_name]
-        
+        # 5. Tune Random Forest and XGBoost (as done in notebook)
         print("\n" + "="*80)
-        print(f"🏆 BEST MODEL: {best_model_name}")
+        print("HYPERPARAMETER TUNING - RANDOM FOREST & XGBOOST")
+        print("="*80)
+        
+        # Tune Random Forest
+        rf_tuned_model = tune_best_model(
+            X_train_scaled, y_train, X_test_scaled, y_test,
+            'Random Forest', results['Random Forest']['model']
+        )
+        
+        # Evaluate tuned RF
+        y_pred_rf_tuned = rf_tuned_model.predict(X_test_scaled)
+        y_pred_proba_rf_tuned = rf_tuned_model.predict_proba(X_test_scaled)[:, 1]
+        
+        rf_tuned_accuracy = accuracy_score(y_test, y_pred_rf_tuned)
+        rf_tuned_f1 = f1_score(y_test, y_pred_rf_tuned, zero_division=0, average='binary')
+        rf_tuned_roc_auc = roc_auc_score(y_test, y_pred_proba_rf_tuned)
+        
+        # Tune XGBoost
+        xgb_tuned_model = tune_best_model(
+            X_train_scaled, y_train, X_test_scaled, y_test,
+            'XGBoost', results['XGBoost']['model']
+        )
+        
+        # Evaluate tuned XGBoost
+        y_pred_xgb_tuned = xgb_tuned_model.predict(X_test_scaled)
+        y_pred_proba_xgb_tuned = xgb_tuned_model.predict_proba(X_test_scaled)[:, 1]
+        
+        xgb_tuned_accuracy = accuracy_score(y_test, y_pred_xgb_tuned)
+        xgb_tuned_f1 = f1_score(y_test, y_pred_xgb_tuned, zero_division=0, average='binary')
+        xgb_tuned_roc_auc = roc_auc_score(y_test, y_pred_proba_xgb_tuned)
+        
+        # 6. Compare all models including tuned versions
+        print("\n" + "="*80)
+        print("FINAL MODEL SELECTION")
+        print("="*80)
+        
+        # Build comparison including tuned models
+        all_accuracies = {name: results[name]['accuracy'] for name in results.keys()}
+        all_accuracies['RF (Tuned)'] = rf_tuned_accuracy
+        all_accuracies['XGBoost (Tuned)'] = xgb_tuned_accuracy
+        
+        # Select best model
+        best_model_name = max(all_accuracies, key=all_accuracies.get)
+        best_accuracy = all_accuracies[best_model_name]
+        
+        print(f"\n📊 Model Comparison:")
+        print(f"{'Model':<25} | {'Accuracy':<10}")
+        print(f"{'-'*25} | {'-'*10}")
+        for name, acc in sorted(all_accuracies.items(), key=lambda x: x[1], reverse=True):
+            print(f"{name:<25} | {acc:<10.4f}")
+        
+        # Determine which model object to use
+        if best_model_name == 'RF (Tuned)':
+            final_best_model = rf_tuned_model
+            y_pred_final = y_pred_rf_tuned
+            y_pred_proba_final = y_pred_proba_rf_tuned
+            best_f1 = rf_tuned_f1
+            best_roc_auc = rf_tuned_roc_auc
+            best_cv_mean = results['Random Forest']['cv_mean']
+        elif best_model_name == 'XGBoost (Tuned)':
+            final_best_model = xgb_tuned_model
+            y_pred_final = y_pred_xgb_tuned
+            y_pred_proba_final = y_pred_proba_xgb_tuned
+            best_f1 = xgb_tuned_f1
+            best_roc_auc = xgb_tuned_roc_auc
+            best_cv_mean = results['XGBoost']['cv_mean']
+        else:
+            final_best_model = results[best_model_name]['model']
+            y_pred_final = results[best_model_name]['y_pred']
+            y_pred_proba_final = results[best_model_name]['y_pred_proba']
+            best_f1 = results[best_model_name]['f1_score']
+            best_roc_auc = results[best_model_name]['roc_auc']
+            best_cv_mean = results[best_model_name]['cv_mean']
+        
+        best_metrics = {
+            'accuracy': best_accuracy,
+            'precision': precision_score(y_test, y_pred_final, zero_division=0, average='binary'),
+            'recall': recall_score(y_test, y_pred_final, zero_division=0, average='binary'),
+            'f1_score': best_f1,
+            'roc_auc': best_roc_auc,
+            'cv_mean': best_cv_mean
+        }
+        
+        print(f"\n🏆 BEST MODEL: {best_model_name}")
         print("="*80)
         print(f"   Accuracy:  {best_metrics['accuracy']:.4f}")
         print(f"   Precision: {best_metrics['precision']:.4f}")
         print(f"   Recall:    {best_metrics['recall']:.4f}")
         print(f"   F1-Score:  {best_metrics['f1_score']:.4f}")
         print(f"   ROC-AUC:   {best_metrics['roc_auc']:.4f}")
-        print(f"   CV Score:  {best_metrics['cv_mean']:.4f} (±{best_metrics['cv_std']:.4f})")
-        
-        # 6. Tune best model
-        tuned_model = tune_best_model(
-            X_train_scaled, y_train, X_test_scaled, y_test,
-            best_model_name, results[best_model_name]['model']
-        )
+        print(f"   CV Score:  {best_metrics['cv_mean']:.4f}")
         
         # 7. Final evaluation
-        y_pred_final = tuned_model.predict(X_test_scaled)
-        y_pred_proba_final = tuned_model.predict_proba(X_test_scaled)[:, 1]
-        
         final_metrics = {
-            'accuracy': accuracy_score(y_test, y_pred_final),
-            'precision': precision_score(y_test, y_pred_final, zero_division=0),
-            'recall': recall_score(y_test, y_pred_final, zero_division=0),
-            'f1_score': f1_score(y_test, y_pred_final, zero_division=0),
-            'roc_auc': roc_auc_score(y_test, y_pred_proba_final)
+            'accuracy': best_metrics['accuracy'],
+            'precision': best_metrics['precision'],
+            'recall': best_metrics['recall'],
+            'f1_score': best_metrics['f1_score'],
+            'roc_auc': best_metrics['roc_auc']
         }
         
         # 8. Prepare metadata
         metadata = {
-            'model_name': f'{best_model_name} (Tuned)',
-            'model_type': type(tuned_model).__name__,
+            'model_name': best_model_name,
+            'model_type': type(final_best_model).__name__,
             'training_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             'dataset_path': DATA_PATH,
             'dataset_size': len(df),
@@ -415,11 +498,11 @@ def main():
             'test_size': TEST_SIZE,
             'random_state': RANDOM_STATE,
             'metrics': final_metrics,
-            'cv_score': best_metrics['cv_mean']
+            'cv_score': best_cv_mean
         }
         
         # 9. Save artifacts
-        save_artifacts(tuned_model, scaler, list(X_train.columns), metadata)
+        save_artifacts(final_best_model, scaler, list(X_train.columns), metadata)
         
         # 10. Final summary
         end_time = datetime.now()
