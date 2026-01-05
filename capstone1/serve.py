@@ -21,7 +21,6 @@ logger = logging.getLogger(__name__)
 # Initialize predictor
 predictor = predict.HeartDiseasePredictor()
 
-@app.before_first_request
 def load_model():
     """Load model when the app starts"""
     logger.info("Starting Flask server...")
@@ -29,6 +28,8 @@ def load_model():
         logger.info("✅ Model loaded successfully")
     else:
         logger.error("❌ Failed to load model")
+
+load_model()
 
 @app.route('/')
 def home():
