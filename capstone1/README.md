@@ -743,6 +743,12 @@ python -c "import joblib; m=joblib.load('models/model_metadata.pkl'); print(f\"A
 ### Pushed the Image to Docker Hub
 ![Docker Testing](./images/k8s-docker-image-push.png)  
 
+### Render Free-tier Deployment
+![Docker Testing](./images/k8s-render-01.png)  
+
+### Azure AKS Deployment
+![Docker Testing](./images/k8s-cluster-deployment-01.png)  
+
 ## 🌐 Cloud Deployment
 
 Deploy to major cloud providers:
