@@ -6,8 +6,9 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application
+# Copy application files
 COPY models/ models/
+COPY templates/ templates/
 COPY predict.py .
 COPY serve.py .
 

@@ -626,12 +626,16 @@ docker-compose up -d
 
 We trained and compared **4 machine learning algorithms** on 1,025 patient records:
 
-| Model | Accuracy | Precision | Recall | F1-Score | ROC-AUC | Training Time |
-|-------|----------|-----------|--------|----------|---------|---------------|
-| Logistic Regression | 85.37% | 86.96% | 86.96% | 86.96% | 0.9180 | 0.8s |
-| **Random Forest (Tuned)** | **86.83%** | **88.00%** | **88.00%** | **88.00%** | **0.9350** | **3.2s** |
-| Gradient Boosting | 84.39% | 85.71% | 85.71% | 85.71% | 0.9120 | 2.5s |
-| XGBoost | 85.37% | 86.96% | 86.96% | 86.96% | 0.9200 | 1.9s |
+| Model | Accuracy | F1 Score | ROC-AUC |
+| --- | --- | --- | --- |
+| **Logistic Regression** | **0.8033** | **0.8235** | **0.8712** |
+| Decision Tree | 0.8033 | 0.8182 | 0.8019 |
+| Random Forest | 0.7541 | 0.7761 | 0.8588 |
+| Gradient Boosting | 0.7213 | 0.7463 | 0.8258 |
+| XGBoost | 0.7213 | 0.7463 | 0.8323 |
+| SVM | 0.7705 | 0.7941 | 0.8420 |
+| K-Nearest Neighbors | 0.7869 | 0.8116 | 0.8377 |
+| Naive Bayes | 0.7869 | 0.7937 | 0.8842 |
 
 ### Best Model: Random Forest (Tuned)
 
@@ -745,6 +749,11 @@ python -c "import joblib; m=joblib.load('models/model_metadata.pkl'); print(f\"A
 
 ### Render Free-tier Deployment
 ![Docker Testing](./images/k8s-render-01.png)  
+
+### Render-deployed App URL:
+https://heart-disease-prediction-2026.onrender.com  
+
+![Docker Testing](./images/k8s-render-02.png)  
 
 ### Azure AKS Deployment
 ![Docker Testing](./images/k8s-cluster-deployment-01.png)  
