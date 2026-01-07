@@ -150,30 +150,35 @@ curl -X POST http://localhost:9696/predict \
 ```
 capstone1/
 │
-├── data/                       # Dataset directory
-│   ├── heart.csv               # Heart disease dataset with patient health features
-│   └── link.txt                # Source/reference link for the dataset
-├── images/                     # Documentation images
-│   ├── testing_api.png         # Screenshot demonstrating API testing/usage
-│   └── testing_web.png         # Screenshot demonstrating Flask web app testing/usage
-├── models/                     # Trained model artifacts (generated after training)
-│   ├── feature_names.pkl       # Saved feature names used during training
-│   ├── heart_disease_model.pkl # Saved trained ML model
-│   ├── model_metadata.pkl      # Model metadata (hyperparameters, training configuration)
-│   └── scaler. pkl             # Saved feature scaler for data normalization
-├── templates/                  # Flask web app
-│   └── home. html              # Web form template
-├── .dockerignore               # List files which are excluded from the Docker image
-├── docker-compose.yml          # Configuration file to run Docker image
-├── Dockerfile                  # Container configuration for deploying the ML model
+├── data/                              # Dataset directory
+│   ├── heart.csv                      # Heart disease dataset with patient health features
+│   └── link.txt                       # Source/reference link for the dataset
+├── images/                            # Documentation images
+│   ├── k8s-cluster-deployment-01.png  # Deploying to Azure Kubernetes Services
+│   ├── k8s-docker-image-push.png      # Pushing the Docker built image to Docker Hub
+│   ├── k8s-render-01.png              # Screenshot demonstrating Docker image upload to Render
+│   ├── k8s-render-02.png              # Screenshot demonstrating Docker image use on Render
+│   ├── testing_api.png                # Screenshot demonstrating API testing/usage
+│   ├── testing_docker.png             # Screenshot demonstrating docker testing/usage
+│   └── testing_web.png                # Screenshot demonstrating Flask web app testing/usage
+├── models/                            # Trained model artifacts (generated after training)
+│   ├── feature_names.pkl              # Saved feature names used during training
+│   ├── heart_disease_model.pkl        # Saved trained ML model
+│   ├── model_metadata.pkl             # Model metadata (hyperparameters, training configuration)
+│   └── scaler. pkl                    # Saved feature scaler for data normalization
+├── templates/                         # Flask web app
+│   └── home. html                     # Web form template
+├── .dockerignore                      # List files which are excluded from the Docker image
+├── docker-compose.yml                 # Configuration file to run Docker image
+├── Dockerfile                         # Container configuration for deploying the ML model
 │
-├── README.md                   # Project documentation with dataset info, API usage, and deployment guide
-├── requirements.txt            # Python dependencies (scikit-learn, pandas, numpy, flask, etc.)
+├── README.md                          # Project documentation with dataset info, API usage, and deployment guide
+├── requirements.txt                   # Python dependencies (scikit-learn, pandas, numpy, flask, etc.)
 │
-├── notebook.ipynb              # EDA, feature analysis, model experiments, and performance evaluation
-├── predict.py                  # Script to load model and make predictions on new data
-├── serve.py                    # Flask API/Web application for model deployment and prediction endpoints
-└── train.py                    # Script to train and save the final model with preprocessing pipeline
+├── notebook.ipynb                     # EDA, feature analysis, model experiments, and performance evaluation
+├── predict.py                         # Script to load model and make predictions on new data
+├── serve.py                           # Flask API/Web application for model deployment and prediction endpoints
+└── train.py                           # Script to train and save the final model with preprocessing pipeline
 ```
 
 ## 📖 Usage
@@ -189,62 +194,66 @@ python train.py
 **Expected output:**
 ```
 ================================================================================
-HEART DISEASE PREDICTION - MODEL TRAINING
-================================================================================
-Start time: 2026-01-05 15:30:00
-Dataset: data/heart.csv
+HEART DISEASE PREDICTION - TRAINING PIPELINE
 ================================================================================
 
-Loading dataset...
-✅ Dataset loaded: (1025, 14)
-✅ No missing values detected
-✅ No duplicates detected
+[1/7] Loading dataset...
+✅ Dataset loaded: 1025 samples, 14 features
+✅ Duplicates removed. New shape: (302, 14)
 
-✅ Final dataset shape: (1025, 14)
-   Samples: 1025
-   Features: 13
+[2/7] Splitting data...
+✅ Training set: 241 samples (79.8%)
+✅ Testing set: 61 samples (20.2%)
+
+[3/7] Scaling features...
+✅ Features scaled using StandardScaler
+
+[4/7] Training models...
+  Logistic Regression      : Accuracy=0.8033, F1=0.8235, ROC-AUC=0.8712
+  Decision Tree            : Accuracy=0.8033, F1=0.8182, ROC-AUC=0.8019
+  Random Forest            : Accuracy=0.7541, F1=0.7761, ROC-AUC=0.8588
+  Gradient Boosting        : Accuracy=0.7213, F1=0.7463, ROC-AUC=0.8258
+  XGBoost                  : Accuracy=0.7213, F1=0.7463, ROC-AUC=0.8323
+  SVM                      : Accuracy=0.7705, F1=0.7941, ROC-AUC=0.8420
+  K-Nearest Neighbors      : Accuracy=0.7869, F1=0.8116, ROC-AUC=0.8377
+  Naive Bayes              : Accuracy=0.7869, F1=0.7937, ROC-AUC=0.8842
+✅ All models trained successfully!
+
+[5/7] Hyperparameter tuning for Random Forest...
+✅ RF Tuned: Accuracy=0.7869, F1=0.8060, ROC-AUC=0.8636
+
+[6/7] Hyperparameter tuning for XGBoost...
+✅ XGB Tuned: Accuracy=0.7705, F1=0.7879, ROC-AUC=0.8582
+
+[7/7] Selecting best model...
+
+🏆 BEST MODEL: Logistic Regression
+   Accuracy: 0.8033
+   F1-Score: 0.8235
+   ROC-AUC: 0.8712
 
 ================================================================================
-PREPARING DATA FOR TRAINING
+SAVING MODEL ARTIFACTS
 ================================================================================
-   Total samples: 1025
-   Training samples: 820 (80.0%)
-   Test samples: 205 (20.0%)
+✅ Model saved: models/heart_disease_model.pkl
+✅ Scaler saved: models/scaler.pkl
+✅ Feature names saved: models/feature_names.pkl
+✅ Model metadata saved: models/model_metadata.pkl
+
+🔍 Verifying saved model...
+✅ Model verification successful!
 
 ================================================================================
-TRAINING MULTIPLE MODELS
+TRAINING PIPELINE COMPLETED SUCCESSFULLY!
 ================================================================================
-Training Logistic Regression...
-  ✅ Accuracy: 0.8537 | Precision: 0.8696 | Recall: 0.8696
-Training Random Forest...
-  ✅ Accuracy: 0.8585 | Precision: 0.8750 | Recall: 0.8750
-Training Gradient Boosting...
-  ✅ Accuracy: 0.8439 | Precision: 0.8571 | Recall: 0.8571
-Training XGBoost...
-  ✅ Accuracy: 0.8537 | Precision: 0.8696 | Recall: 0.8696
 
-🏆 BEST MODEL: Random Forest
-   Accuracy: 0.8585
-   ROC-AUC: 0.9234
+📦 Saved files:
+  • models/heart_disease_model.pkl
+  • models/scaler.pkl
+  • models/feature_names.pkl
+  • models/model_metadata.pkl
 
-HYPERPARAMETER TUNING - Random Forest
-🏆 Best Parameters:
-   n_estimators: 200
-   max_depth: 15
-   min_samples_split: 2
-   min_samples_leaf: 1
-
-✅ TRAINING COMPLETE!
-📊 Final Model: Random Forest (Tuned)
-📊 Test Set Performance:
-   Accuracy:  0.8683
-   Precision: 0.8800
-   Recall:    0.8800
-   F1-Score:  0.8800
-   ROC-AUC:   0.9350
-
-⏱️  Training Duration: 45.2 seconds
-✅ Model is ready for deployment!
+🚀 Model is ready for production deployment!
 ```
 
 **Artifacts created:**
@@ -556,26 +565,13 @@ Predict for multiple patients at once
 ### Build Docker Image
 
 ```bash
-docker build -t heart-disease-api .
-```
-
-**Expected output:**
-```
-[+] Building 45.2s (12/12) FINISHED
- => [1/6] FROM python:3.11-slim
- => [2/6] WORKDIR /app
- => [3/6] COPY requirements.txt .
- => [4/6] RUN pip install --no-cache-dir -r requirements.txt
- => [5/6] COPY models/ models/
- => [6/6] COPY *.py .
- => exporting to image
- => => naming to docker.io/library/heart-disease-api
+docker build -t heart-disease-prediction-2026 .
 ```
 
 ### Run Container
 
 ```bash
-docker run -p 9696:9696 heart-disease-api
+docker run -p 9696:9696 heart-disease-prediction-2026
 ```
 
 ### Test Deployment
@@ -596,26 +592,8 @@ curl -X POST http://localhost:9696/predict \
 
 ### Docker Compose
 
-Create `docker-compose.yml`:
-```yaml
-version: '3.8'
+Run `docker-compose.yml`:
 
-services:
-  api:
-    build: .
-    ports:
-      - "9696:9696"
-    environment:
-      - FLASK_ENV=production
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9696/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-```
-
-Run:
 ```bash
 docker-compose up -d
 ```
@@ -637,26 +615,12 @@ We trained and compared **4 machine learning algorithms** on 1,025 patient recor
 | K-Nearest Neighbors | 0.7869 | 0.8116 | 0.8377 |
 | Naive Bayes | 0.7869 | 0.7937 | 0.8842 |
 
-### Best Model: Random Forest (Tuned)
-
-**Hyperparameters:**
-```python
-{
-    'n_estimators': 200,
-    'max_depth': 15,
-    'min_samples_split': 2,
-    'min_samples_leaf': 1,
-    'max_features': 'sqrt'
-}
-```
+### Best Model: Logistic Regression
 
 **Performance Metrics:**
-- **Test Accuracy:** 86.83%
-- **Test Precision:** 88.00%
-- **Test Recall:** 88.00%
-- **Test F1-Score:** 88.00%
-- **Test ROC-AUC:** 93.50%
-- **5-Fold CV Score:** 85.64% (±2.1%)
+- **Test Accuracy:** 80.33%
+- **Test F1-Score:** 82.35%
+- **Test ROC-AUC:** 87.12%
 
 ### Confusion Matrix (Test Set: 205 samples)
 
@@ -672,12 +636,6 @@ Actual  No      88          5
 - False Positives (FP): 5
 - False Negatives (FN): 22
 - True Positives (TP): 90
-
-**Derived Metrics:**
-- **Specificity:** 94.62% (correctly identified healthy patients)
-- **Sensitivity (Recall):** 80.36% (correctly identified disease patients)
-- **NPV:** 80.00% (negative predictive value)
-- **PPV (Precision):** 94.74% (positive predictive value)
 
 ### Feature Importance
 
@@ -695,14 +653,6 @@ Top 10 most important features for prediction:
 | 8 | **trestbps** | 0.0654 | Resting blood pressure |
 | 9 | **exang** | 0.0543 | Exercise induced angina |
 | 10 | **slope** | 0.0432 | Slope of peak exercise ST segment |
-
-### ROC Curve Analysis
-
-All models achieved excellent discrimination:
-- Random Forest (Tuned): **AUC = 0.9350** 🏆
-- XGBoost: AUC = 0.9200
-- Logistic Regression: AUC = 0.9180
-- Gradient Boosting: AUC = 0.9120
 
 ## 🔄 Reproducibility
 
@@ -766,14 +716,14 @@ Deploy to major cloud providers:
 
 ```bash
 # Build and push to ECR
-aws ecr create-repository --repository-name heart-disease-api
-docker tag heart-disease-api:latest <account-id>.dkr.ecr.<region>.amazonaws.com/heart-disease-api:latest
-docker push <account-id>.dkr.ecr.<region>.amazonaws.com/heart-disease-api:latest
+aws ecr create-repository --repository-name heart-disease-prediction-2026
+docker tag heart-disease-prediction-2026:latest <account-id>.dkr.ecr.<region>.amazonaws.com/heart-disease-prediction-2026:latest
+docker push <account-id>.dkr.ecr.<region>.amazonaws.com/heart-disease-prediction-2026:latest
 
 # Deploy to ECS Fargate
 aws ecs create-service \
   --cluster my-cluster \
-  --service-name heart-disease-api \
+  --service-name heart-disease-prediction-2026 \
   --task-definition heart-disease:1 \
   --desired-count 2 \
   --launch-type FARGATE
@@ -788,11 +738,11 @@ az group create --name heart-disease-rg --location eastus
 # Deploy container
 az container create \
   --resource-group heart-disease-rg \
-  --name heart-disease-api \
-  --image heart-disease-api:latest \
+  --name heart-disease-prediction-2026 \
+  --image heart-disease-prediction-2026:latest \
   --cpu 1 --memory 1.5 \
   --port 9696 \
-  --dns-name-label heart-disease-api
+  --dns-name-label heart-disease-prediction-2026
 ```
 
 ### Google Cloud Platform (Cloud Run)
@@ -808,36 +758,3 @@ gcloud run deploy heart-disease-api \
   --region us-central1 \
   --allow-unauthenticated
 ```
-
-## 🤝 Contributing
-
-Contributions welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-improvement`)
-3. Commit changes (`git commit -m 'Add amazing improvement'`)
-4. Push to branch (`git push origin feature/amazing-improvement`)
-5. Open a Pull Request
-
-## 👥 Authors
-
-- **Vovan** - [GitHub](https://github.com/dataops95)
-
-## 🙏 Acknowledgments
-
-- Dataset: UCI Machine Learning Repository
-- Course: ML Zoomcamp 2025
-- Framework: Scikit-learn, XGBoost, Flask
-
-## 📞 Contact
-
-- **GitHub**: [@dataops95](https://github.com/dataops95)
-- **Repository**: [ml-zoomcamp-homeworks-2025](https://github.com/dataops95/ml-zoomcamp-homeworks-2025/tree/main/capstone1)
-
----
-
-⭐ **If you find this project helpful, please give it a star!**
-
-**Last Updated:** January 5, 2026  
-**Dataset Version:** heart.csv (1,025 samples)  
-**Model Version:** 1.0.0
